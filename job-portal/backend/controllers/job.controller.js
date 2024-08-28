@@ -60,20 +60,26 @@ export const postJob = async (req, res) => {
 };
 export const getJobs = async (req, res) => {
   try {
-    const keyword = req.query.keyword
-      ? {
+    const keyword = req.query.keyword || "";
+
+    const query = {
+      $or: [
+        {
           title: {
-            $regex: req.query.keyword,
+            $regex: keyword,
             $options: "i",
           },
           description: {
-            $regex: req.query.keyword,
+            $regex: keyword,
             $options: "i",
           },
-        }
-      : {};
+        },
+      ],
+    };
 
-    const jobs = await Job.find({ ...keyword });
+    const jobs = await Job.find(query)
+      .populate("companyId")
+      .sort({ createdAt: -1 });
     if (!jobs) {
       return res.status(404).json({ message: "No jobs found", success: false });
     }
@@ -100,6 +106,19 @@ export const getCompanyJobs = async (req, res) => {
   try {
     const companyId = req.params.id;
     const jobs = await Job.find({ companyId });
+    if (!jobs) {
+      return res.status(404).json({ message: "No jobs found", success: false });
+    }
+    return res.status(200).json({ success: true, jobs });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const getUserJobs = async (req, res) => {
+  try {
+    const id = req.id;
+    const jobs = await Job.find({ createdBy: id });
     if (!jobs) {
       return res.status(404).json({ message: "No jobs found", success: false });
     }
