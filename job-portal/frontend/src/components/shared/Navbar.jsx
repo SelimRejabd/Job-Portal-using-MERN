@@ -1,13 +1,30 @@
 // eslint-disable-next-line no-unused-vars
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import { LogOut, User2 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { clearSuccessandMessage, logoutUser } from "@/features/slice/UserSlice";
+import { toast } from "sonner";
 
 const Navbar = () => {
-  const user = false;
+  const dispatch = useDispatch();
+  const { user, success, message } = useSelector((state) => state.user);
+  {
+    if (user) console.log(user);
+  }
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
+
+  useEffect(() => {
+    if (success) {
+      toast.success(message);
+      dispatch(clearSuccessandMessage());
+    }
+  }, [success, message, dispatch]);
   return (
     <div className="bg-white">
       <div className="flex items-center justify-between mx-auto h-16 ml-12 mr-12">
@@ -46,8 +63,8 @@ const Navbar = () => {
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <div>
-                    <h4 className="font-bold">REJA</h4>
-                    <p className="text-sm text-gray-500">Student</p>
+                    <h4 className="font-bold">{user.name.toUpperCase()}</h4>
+                    <p className="text-sm text-gray-500">{user.role}</p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2 mt-4">
@@ -59,7 +76,11 @@ const Navbar = () => {
                   </div>
                   <div className="flex w-fit items-center gap-2 cursor-pointer">
                     <LogOut />
-                    <Button variant="Link" className="white">
+                    <Button
+                      variant="Link"
+                      className="white"
+                      onClick={handleLogout}
+                    >
                       Logout
                     </Button>
                   </div>

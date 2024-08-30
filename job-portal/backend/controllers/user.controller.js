@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
-    if (!name || !email || !password) {
+    const { name, email, password, role, file } = req.body;
+    if (!name || !email || !password || !role || !file) {
       return res.status(400).json({ error: "All fields are required" });
     }
     const user = await User.findOne({ email });
@@ -29,7 +29,7 @@ export const register = async (req, res) => {
         resume: "",
         resumeOriginalName: "",
         company: null,
-        profileImage: "",
+        profileImage: file,
       },
     });
     return res
