@@ -25,7 +25,7 @@ const Navbar = () => {
   }, [success, message, dispatch]);
   return (
     <div className="bg-white">
-      <div className="flex items-center justify-between mx-auto h-16 ml-12 mr-12">
+      <div className="flex items-center justify-between mx-auto h-10 ml-12 mt-5 mr-12">
         <Link to="/">
           <div>
             <h1 className="text-2xl font-bold">
