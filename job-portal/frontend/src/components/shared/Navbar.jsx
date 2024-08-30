@@ -12,9 +12,7 @@ import { toast } from "sonner";
 const Navbar = () => {
   const dispatch = useDispatch();
   const { user, success, message } = useSelector((state) => state.user);
-  {
-    if (user) console.log(user);
-  }
+
   const handleLogout = () => {
     dispatch(logoutUser());
   };
@@ -28,24 +26,26 @@ const Navbar = () => {
   return (
     <div className="bg-white">
       <div className="flex items-center justify-between mx-auto h-16 ml-12 mr-12">
-        <div>
-          <h1 className="text-2xl font-bold">
-            Job<span className="text-[#F83002]">Portal</span>
-          </h1>
-        </div>
+        <Link to="/">
+          <div>
+            <h1 className="text-2xl font-bold">
+              Job<span className="text-[#F83002]">Portal</span>
+            </h1>
+          </div>
+        </Link>
         <div className="flex items-center gap-12">
           <ul className="flex font-medium items-center gap-5">
-            <li className="mx-2">Home</li>
+            <li className="mx-2"><Link to="/">Home</Link></li>
             <li className="mx-2">About</li>
             <li className="mx-2">Contact</li>
           </ul>
-          {!user ? (
+          {user === null ? (
             <div className="flex items-center gap-5">
               <Link to="/login">
                 <Button variant="secondary">Login</Button>
               </Link>
               <Link to="/sign-up">
-                <Button variant="primary">Sign Up</Button>
+                <Button>Sign Up</Button>
               </Link>
             </div>
           ) : (

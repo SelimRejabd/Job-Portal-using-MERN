@@ -8,7 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import { clearSuccessandMessage, registerUser } from "@/features/slice/UserSlice";
+import { clearError, clearSuccessandMessage, registerUser } from "@/features/slice/UserSlice";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -22,6 +22,13 @@ const SignUp = () => {
 
   const { user, success, message, error } = useSelector((state) => state.user);
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error.toString());
+    }
+    dispatch(clearError());
+  }, [dispatch, error]);
+  
   const fileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -44,7 +51,6 @@ const SignUp = () => {
       role,
       file,
     };
-    console.log(inputData);
     dispatch(registerUser(inputData));
   };
 

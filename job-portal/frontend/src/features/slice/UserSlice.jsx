@@ -89,6 +89,9 @@ const userSlice = createSlice({
       state.success = null;
       state.message = null;
     },
+    clearError: (state) => {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -102,9 +105,9 @@ const userSlice = createSlice({
         state.success = action.payload.success;
         state.message = action.payload.message;
       })
-      .addCase(registerUser.rejected, (state, action) => {
+      .addCase(registerUser.rejected, (state) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.error = "Registration failed";
       })
 
       // Login User
@@ -117,9 +120,9 @@ const userSlice = createSlice({
         state.success = action.payload.success;
         state.message = action.payload.message;
       })
-      .addCase(loginUser.rejected, (state, action) => {
+      .addCase(loginUser.rejected, (state) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.error = "Invalid email or password";
       })
 
       // Get User
@@ -166,5 +169,5 @@ const userSlice = createSlice({
 });
 
 // Export the logout action and the reducer
-export const { clearSuccessandMessage } = userSlice.actions;
+export const { clearSuccessandMessage, clearError } = userSlice.actions;
 export default userSlice.reducer;

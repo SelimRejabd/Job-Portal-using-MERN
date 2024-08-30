@@ -7,7 +7,11 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSuccessandMessage, loginUser } from "@/features/slice/UserSlice";
+import {
+  clearError,
+  clearSuccessandMessage,
+  loginUser,
+} from "@/features/slice/UserSlice";
 import { toast } from "sonner";
 
 const Login = () => {
@@ -19,7 +23,6 @@ const Login = () => {
 
   const { user, success, message, error } = useSelector((state) => state.user);
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const inputData = {
@@ -27,7 +30,7 @@ const Login = () => {
       password,
     };
     dispatch(loginUser(inputData));
-  }
+  };
 
   useEffect(() => {
     if (success) {
@@ -36,6 +39,13 @@ const Login = () => {
       dispatch(clearSuccessandMessage());
     }
   }, [success, navigate, message, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.toString());
+    }
+    dispatch(clearError());
+  }, [dispatch, error]);
 
   return (
     <div className="flex items-center justify-center mx-w-7xl  mx-auto">
