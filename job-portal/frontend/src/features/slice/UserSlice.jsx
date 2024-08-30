@@ -105,9 +105,9 @@ const userSlice = createSlice({
         state.success = action.payload.success;
         state.message = action.payload.message;
       })
-      .addCase(registerUser.rejected, (state) => {
+      .addCase(registerUser.rejected, (state, action) => {
         state.status = "failed";
-        state.error = "Registration failed";
+        state.error = action.payload.message;
       })
 
       // Login User
@@ -120,9 +120,9 @@ const userSlice = createSlice({
         state.success = action.payload.success;
         state.message = action.payload.message;
       })
-      .addCase(loginUser.rejected, (state) => {
+      .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
-        state.error = "Invalid email or password";
+        state.error = action.payload.message;
       })
 
       // Get User

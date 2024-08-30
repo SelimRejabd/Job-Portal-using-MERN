@@ -8,7 +8,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import { clearError, clearSuccessandMessage, registerUser } from "@/features/slice/UserSlice";
+import {
+  clearError,
+  clearSuccessandMessage,
+  registerUser,
+} from "@/features/slice/UserSlice";
+import { Loader2 } from "lucide-react";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -20,7 +25,9 @@ const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, success, message, error } = useSelector((state) => state.user);
+  const { user, success, message, error, status } = useSelector(
+    (state) => state.user
+  );
 
   useEffect(() => {
     if (error) {
@@ -28,7 +35,7 @@ const SignUp = () => {
     }
     dispatch(clearError());
   }, [dispatch, error]);
-  
+
   const fileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -40,7 +47,6 @@ const SignUp = () => {
       dispatch(clearSuccessandMessage());
     }
   }, [success, navigate, message, dispatch]);
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -130,9 +136,16 @@ const SignUp = () => {
             />
           </div>
         </div>
-        <Button type="submit" className="w-full my-4">
-          Sign Up
-        </Button>
+        {status === "loading" ? (
+          <Button type="submit" className="w-full my-4">
+            <Loader2 className="mr-2 h-2 w-2 animate-spin" /> Signing Up...
+          </Button>
+        ) : (
+          <Button type="submit" className="w-full my-4">
+            Sign Up
+          </Button>
+        )}
+
         <span className="block">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-600">

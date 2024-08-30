@@ -13,6 +13,7 @@ import {
   loginUser,
 } from "@/features/slice/UserSlice";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -21,7 +22,9 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, success, message, error } = useSelector((state) => state.user);
+  const { user, success, message, error, status } = useSelector(
+    (state) => state.user
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -83,9 +86,15 @@ const Login = () => {
             className="border border-gray-300 w-full p-2 mb-4 rounded-lg"
           />
         </div>
-        <Button type="submit" className="w-full my-4">
-          Log In
-        </Button>
+        {status === "loading" ? (
+          <Button type="submit" className="w-full my-4">
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Logining...
+          </Button>
+        ) : (
+          <Button type="submit" className="w-full my-4">
+            Login
+          </Button>
+        )}
         <span className="block">
           Don't have an account?{" "}
           <Link to="/sign-up" className="text-blue-600">
