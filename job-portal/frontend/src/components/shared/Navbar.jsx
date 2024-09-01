@@ -35,9 +35,16 @@ const Navbar = () => {
         </Link>
         <div className="flex items-center gap-12">
           <ul className="flex font-medium items-center gap-5">
-            <li className="mx-2"><Link to="/">Home</Link></li>
-            <li className="mx-2"><Link to="/jobs">Jobs</Link></li>
-            <li className="mx-2"><Link to="/browse">Browse</Link></li>          </ul>
+            <li className="mx-2">
+              <Link to="/">Home</Link>
+            </li>
+            <li className="mx-2">
+              <Link to="/jobs">Jobs</Link>
+            </li>
+            <li className="mx-2">
+              <Link to="/browse">Browse</Link>
+            </li>{" "}
+          </ul>
           {user === null ? (
             <div className="flex items-center gap-5">
               <Link to="/login">
@@ -69,9 +76,11 @@ const Navbar = () => {
                 <div className="flex flex-col gap-2 mt-4">
                   <div className="flex w-fit items-center gap-2 cursor-pointer">
                     <User2 />
-                    <Button variant="Link" className="white">
-                      Profile
-                    </Button>
+                    <Link to="/profile">
+                      <Button variant="Link" className="white">
+                        Profile
+                      </Button>
+                    </Link>
                   </div>
                   <div className="flex w-fit items-center gap-2 cursor-pointer">
                     <LogOut />

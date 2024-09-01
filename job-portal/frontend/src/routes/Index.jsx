@@ -8,6 +8,8 @@ import HomePage from "@/components/pages/HomePage";
 import Jobs from "@/components/pages/Jobs";
 import Footer from "@/components/shared/Footer";
 import Browse from "@/components/pages/Browse";
+import Profile from "@/components/pages/Profile";
+import JobDetails from "@/components/pages/JobDetails";
 
 // eslint-disable-next-line react/prop-types, react-refresh/only-export-components
 const Layout = ({ children }) => (
@@ -44,10 +46,26 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/profile",
+    element: (
+      <Layout>
+        <Profile />
+      </Layout>
+    ),
+  },
+  {
     path: "/jobs",
     element: (
       <Layout>
         <Jobs />
+      </Layout>
+    ),
+  },
+  {
+    path: "/job/details/:id",
+    element: (
+      <Layout>
+        <JobDetails />
       </Layout>
     ),
   },
@@ -58,7 +76,7 @@ const router = createBrowserRouter([
         <Browse />
       </Layout>
     ),
-  }
+  },
 ]);
 
 export default router;
