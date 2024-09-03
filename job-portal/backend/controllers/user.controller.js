@@ -1,6 +1,9 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { get } from "mongoose";
+import getUri from "../utils/data.uri.js";
+import cloudinary from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
   try {
@@ -110,6 +113,7 @@ export const updateProfile = async (req, res) => {
       resumeOriginalName,
       company,
     } = req.body;
+
     let user = await User.findById(req.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -118,11 +122,20 @@ export const updateProfile = async (req, res) => {
     if (name) user.name = name;
     if (email) user.email = email;
     if (bio) user.profile.bio = bio;
-    if (skills) user.profile.skills = skills;
+    if (skills) user.profile.skills = skills.split(",");
     if (experience) user.profile.experience = experience;
-    if (resume) user.profile.resume = resume;
-    if (resumeOriginalName) user.profile.resumeOriginalName = resumeOriginalName;
-    
+    if (resumeOriginalName)
+      user.profile.resumeOriginalName = resumeOriginalName;
+
+    const file = req.file;
+    const fileUri = getUri(file);
+    const cloudinaryResponse = await cloudinary.uploader.upload(
+      fileUri.content
+    );
+    if (cloudinaryResponse) {
+      user.profile.resume = cloudinaryResponse.secure_url;
+      user.profile.resumeOriginalName = file.originalname;
+    }
     await user.save();
 
     user = {
@@ -135,7 +148,7 @@ export const updateProfile = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Profile updated successfully", success: true });
+      .json({ user, message: "Profile updated successfully", success: true });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

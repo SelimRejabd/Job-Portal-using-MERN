@@ -28,10 +28,7 @@ export const loginUser = createAsyncThunk(
   "user/loginUser",
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "/api/users/login/",
-        credentials
-      );
+      const response = await axios.post("/api/users/login/", credentials);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -44,9 +41,7 @@ export const logoutUser = createAsyncThunk(
   "user/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        "/api/users/logout"
-      );
+      const response = await axios.get("/api/users/logout");
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -72,7 +67,11 @@ export const updateUser = createAsyncThunk(
   "user/updateUser",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.put("/api/users/update", userData);
+      const response = await axios.put("/api/users/update/", userData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -144,27 +143,31 @@ const userSlice = createSlice({
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.success = action.payload.success;
+        state.message = action.payload.message;
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
+        state.success = action.payload.success;
+        state.message = action.payload.message;
       })
 
-        // Logout User
-        .addCase(logoutUser.pending, (state) => {
-            state.status = "loading";
-        })
-        .addCase(logoutUser.fulfilled, (state, action) => {
-            state.status = "succeeded";
-            state.user = null;
-            state.success = action.payload.success;
-            state.message = action.payload.message;
-        })
-        .addCase(logoutUser.rejected, (state, action) => {
-            state.status = "failed";
-            state.error = action.payload;
-        });
+      // Logout User
+      .addCase(logoutUser.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = null;
+        state.success = action.payload.success;
+        state.message = action.payload.message;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      });
   },
 });
 

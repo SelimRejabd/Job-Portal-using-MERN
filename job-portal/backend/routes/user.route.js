@@ -11,6 +11,6 @@ router.get('/logout', logout);
 
 router.post('/register',singleUpload, register);
 
-router.post('/update', isAuthenticated, updateProfile);
+router.put('/update', isAuthenticated, singleUpload, updateProfile);
 
 export default router;

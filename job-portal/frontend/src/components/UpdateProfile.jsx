@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Dialog,
@@ -11,26 +11,42 @@ import {
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "@/features/slice/UserSlice";
 
 const UpdateProfile = ({ open, setOpen }) => {
+  const dispatch = useDispatch();
   const { user, status } = useSelector((state) => state.user);
   const [input, setInput] = useState({
-    name: user?.name,
-    email: user?.email,
-    bio: user?.profile?.bio,
-    skills: user?.profile?.skills,
-    file: user?.profile?.resume,
+    name: user?.name || "",
+    email: user?.email || "",
+    bio: user?.profile?.bio || "",
+    skills: user?.profile?.skills || "",
+    file: null,
   });
 
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
+  const fileChangeHandler = (e) => {
+    setInput({ ...input, file: e.target.files[0] });
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(input);
+    const formData = new FormData();
+    formData.append("name", input.name);
+    formData.append("email", input.email);
+    formData.append("bio", input.bio);
+    formData.append("skills", input.skills);
+    if (input.file) {
+      formData.append("file", input.file);
+    }
+    dispatch(updateUser(formData));
+    setOpen(false);
   };
+
   return (
     <div>
       <Dialog open={open} onOpenChange={() => setOpen(false)}>
@@ -56,7 +72,7 @@ const UpdateProfile = ({ open, setOpen }) => {
               />
             </div>
             <div className="grid gap-4 py-4">
-              <Label htmlFor="Email" className="">
+              <Label htmlFor="email" className="">
                 Email
               </Label>
               <Input
@@ -99,8 +115,8 @@ const UpdateProfile = ({ open, setOpen }) => {
               <Input
                 id="file"
                 name="file"
-                value={input.resume}
-                onChange={changeEventHandler}
+                type="file"
+                onChange={fileChangeHandler}
                 className="col-span-3"
               />
             </div>

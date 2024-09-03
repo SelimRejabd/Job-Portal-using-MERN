@@ -22,9 +22,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, success, message, error, status } = useSelector(
-    (state) => state.user
-  );
+  const { user, message, error, status } = useSelector((state) => state.user);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,12 +34,12 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (success) {
+    if (message) {
       navigate("/");
       toast.success(message);
       dispatch(clearSuccessandMessage());
     }
-  }, [success, navigate, message, dispatch]);
+  }, [navigate, message, dispatch]);
 
   useEffect(() => {
     if (error) {

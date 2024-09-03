@@ -25,9 +25,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, success, message, error, status } = useSelector(
-    (state) => state.user
-  );
+  const { user, message, error, status } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (error) {
@@ -41,12 +39,12 @@ const SignUp = () => {
   };
 
   useEffect(() => {
-    if (success) {
+    if (message) {
       navigate("/login");
       toast.success(message);
       dispatch(clearSuccessandMessage());
     }
-  }, [success, navigate, message, dispatch]);
+  }, [navigate, message, dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

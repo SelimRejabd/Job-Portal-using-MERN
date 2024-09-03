@@ -11,18 +11,18 @@ import { toast } from "sonner";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const { user, success, message } = useSelector((state) => state.user);
+  const { user, message } = useSelector((state) => state.user);
 
   const handleLogout = () => {
     dispatch(logoutUser());
   };
 
   useEffect(() => {
-    if (success) {
+    if (message) {
       toast.success(message);
       dispatch(clearSuccessandMessage());
     }
-  }, [success, message, dispatch]);
+  }, [message, dispatch]);
   return (
     <div className="bg-white">
       <div className="flex items-center justify-between mx-auto h-10 ml-12 mt-5 mr-12">
@@ -45,16 +45,7 @@ const Navbar = () => {
               <Link to="/browse">Browse</Link>
             </li>{" "}
           </ul>
-          {user === null ? (
-            <div className="flex items-center gap-5">
-              <Link to="/login">
-                <Button variant="secondary">Login</Button>
-              </Link>
-              <Link to="/sign-up">
-                <Button>Sign Up</Button>
-              </Link>
-            </div>
-          ) : (
+          {user !== null ? (
             <Popover>
               <PopoverTrigger>
                 <Avatar className="mr-5">
@@ -69,8 +60,8 @@ const Navbar = () => {
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <div>
-                    <h4 className="font-bold">{user.name.toUpperCase()}</h4>
-                    <p className="text-sm text-gray-500">{user.role}</p>
+                    <h4 className="font-bold">{user?.name.toUpperCase()}</h4>
+                    <p className="text-sm text-gray-500">{user?.role}</p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2 mt-4">
@@ -95,6 +86,15 @@ const Navbar = () => {
                 </div>
               </PopoverContent>
             </Popover>
+          ) : (
+            <div className="flex items-center gap-5">
+              <Link to="/login">
+                <Button variant="secondary">Login</Button>
+              </Link>
+              <Link to="/sign-up">
+                <Button>Sign Up</Button>
+              </Link>
+            </div>
           )}
         </div>
       </div>
