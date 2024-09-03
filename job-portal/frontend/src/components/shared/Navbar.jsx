@@ -49,14 +49,20 @@ const Navbar = () => {
             <Popover>
               <PopoverTrigger>
                 <Avatar className="mr-5">
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage
+                    src={user.profile.profileImage}
+                    alt={user.name}
+                  />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </PopoverTrigger>
               <PopoverContent>
                 <div className="flex gap-4 space-y-2">
                   <Avatar className="mr-5">
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage
+                      src={user.profile.profileImage}
+                      alt={user.name}
+                    />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <div>

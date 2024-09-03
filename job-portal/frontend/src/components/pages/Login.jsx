@@ -41,13 +41,6 @@ const Login = () => {
     }
   }, [navigate, message, dispatch]);
 
-  useEffect(() => {
-    if (error) {
-      toast.error(error.toString());
-    }
-    dispatch(clearError());
-  }, [dispatch, error]);
-
   return (
     <div className="flex items-center justify-center mx-w-7xl  mx-auto">
       <form

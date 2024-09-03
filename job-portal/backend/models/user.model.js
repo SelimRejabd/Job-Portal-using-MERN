@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema(
         ref: "Company",
       },
       profileImage: {
-        type: Object,
+        type: String,
         default: null,
       },
     },

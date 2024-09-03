@@ -7,10 +7,20 @@ import cloudinary from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role, file } = req.body;
+    const { name, email, password, role } = req.body;
+   
+    const file = req.file;
+
     if (!name || !email || !password || !role || !file) {
-      return res.status(400).json({ error: "All fields are required" });
+      return res.status(400).json({ message: "All fields are required" });
     }
+
+    const fileUri = getUri(file);
+    const cloudinaryResponse = await cloudinary.uploader.upload(
+      fileUri.content
+    );
+    console.log(cloudinaryResponse);
+
     const user = await User.findOne({ email });
 
     if (user) {
@@ -32,14 +42,14 @@ export const register = async (req, res) => {
         resume: "",
         resumeOriginalName: "",
         company: null,
-        profileImage: file,
+        profileImage: cloudinaryResponse.secure_url,
       },
     });
     return res
       .status(201)
       .json({ message: "User created successfully", success: true });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message, message: "Failed to Sign Up" });
   }
 };
 

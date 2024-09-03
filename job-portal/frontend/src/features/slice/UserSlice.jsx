@@ -13,9 +13,15 @@ const initialState = {
 // Register a new user
 export const registerUser = createAsyncThunk(
   "user/registerUser",
-  async (userData, { rejectWithValue }) => {
+  async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/users/register/", userData);
+      const response = await axios.post("/api/users/register/", formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -100,13 +106,12 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload.user;
         state.success = action.payload.success;
         state.message = action.payload.message;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload.message;
+        state.message = action.payload.message;
       })
 
       // Login User

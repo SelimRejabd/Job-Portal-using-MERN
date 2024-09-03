@@ -25,14 +25,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, message, error, status } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error.toString());
-    }
-    dispatch(clearError());
-  }, [dispatch, error]);
+  const { message, status, success } = useSelector((state) => state.user);
 
   const fileChange = (e) => {
     setFile(e.target.files[0]);
@@ -40,22 +33,26 @@ const SignUp = () => {
 
   useEffect(() => {
     if (message) {
-      navigate("/login");
       toast.success(message);
       dispatch(clearSuccessandMessage());
     }
   }, [navigate, message, dispatch]);
 
+  useEffect(() => {
+    if (success) {
+      navigate("/login");
+    }
+  }, [success, navigate]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const inputData = {
-      name,
-      email,
-      password,
-      role,
-      file,
-    };
-    dispatch(registerUser(inputData));
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("role", role);
+    formData.append("file", file);
+    dispatch(registerUser(formData));
   };
 
   return (
@@ -124,13 +121,16 @@ const SignUp = () => {
           </RadioGroup>
         </div>
         <div>
-          <div className="flex items-center gap-2">
-            <Label>Profile Picture</Label>
-            <input
+          <div className="grid gap-4 py-4">
+            <Label htmlFor="file" className="">
+              Profile Picture
+            </Label>
+            <Input
+              id="file"
+              name="file"
               type="file"
-              accept="image/*"
-              className="cursor-pointer"
               onChange={fileChange}
+              className="col-span-3"
             />
           </div>
         </div>
